@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world-deployment
+spec:
+  replicas: 5
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: hello-world
+      version: latest
+      env: prod
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: 
+      maxSurge: 3
+      maxUnavailable: 3
+  template:
+    metadata:
+      labels:
+        app: hello-world
+        version: latest
+        env: prod
+        versionNumber: 4.0.1
+    spec:
+      containers:
+      - name: hello-world
+        image: abhishek6774/hello-world:4.0.1
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 3000
+          name: http
+          protocol: TCP
